@@ -1,37 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { teamConfig } from './teamConfig'; 
 
-export default function PortfolioGame({ 
-  customGithub = "https://github.com/LigouleM",
-  customLinkedin = "https://www.linkedin.com/in/marcos-ligoule-ingalina-aa1b15162/" 
-}) {
-  
-  // Estado para controlar qué popup está abierto (null = cerrado)
-  const [activePopup, setActivePopup] = useState(null);
+export default function PortfolioGame() {
+  const [activePopupId, setActivePopupId] = useState(null);
+
+  // useMemo evita recalcular esto en cada renderizado de React
+  const { allLinks, allPopups } = useMemo(() => {
+    return Object.values(teamConfig).reduce(
+      (acc, member) => {
+        // Juntamos todos los links de todos los miembros
+        acc.allLinks = { ...acc.allLinks, ...member.links };
+        // Juntamos todos los popups de todos los miembros
+        acc.allPopups = { ...acc.allPopups, ...member.popups };
+        return acc;
+      },
+      { allLinks: {}, allPopups: {} }
+    );
+  }, []);
 
   useEffect(() => {
-    // Función que intercepta los mensajes del iframe
     const handleGodotMessage = (event) => {
       if (event.data && event.data.type === 'GODOT_POPUP') {
-        setActivePopup(event.data.id);
+        setActivePopupId(event.data.id);
       }
     };
 
     window.addEventListener('message', handleGodotMessage);
-    
-    // Limpieza del listener al desmontar el componente
     return () => window.removeEventListener('message', handleGodotMessage);
   }, []);
 
-  const queryParams = new URLSearchParams({
-    github: customGithub,
-    linkedin: customLinkedin
-  }).toString();
+  // Generamos la query string con los links de todo el equipo
+  const queryParams = new URLSearchParams(allLinks).toString();
+  
+  // React encuentra el contenido al instante en el objeto unificado
+  const activePopupData = activePopupId ? allPopups[activePopupId] : null;
 
   return (
-    // position: 'relative' es crucial para que el popup se posicione sobre el juego
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      
-      {/* EL JUEGO DE GODOT */}
       <iframe
         title="Navegación 3D"
         src={`/godot-game/index.html?${queryParams}`}
@@ -42,21 +47,14 @@ export default function PortfolioGame({
         allow="autoplay; fullscreen"
       />
 
-      {/* EL POPUP DE REACT (Se renderiza solo si activePopup tiene un ID) */}
-      {activePopup && (
+      {activePopupData && (
         <div style={styles.overlay}>
           <div style={styles.modal}>
-            <h2>Información: {activePopup}</h2>
+            <h2>{activePopupData.title}</h2>
+            <p>{activePopupData.content}</p>
             
-            {/* Aquí puedes renderizar distintos componentes dependiendo del ID */}
-            {activePopup === 'sobre_mi' && <p>Soy desarrollador full-stack y de videojuegos...</p>}
-            {activePopup === 'contacto' && <p>Escríbeme a mi correo: email@ejemplo.com</p>}
-            
-            <button 
-              onClick={() => setActivePopup(null)}
-              style={styles.closeButton}
-            >
-              Cerrar y volver al juego
+            <button onClick={() => setActivePopupId(null)} style={styles.closeButton}>
+              Cerrar
             </button>
           </div>
         </div>
@@ -65,35 +63,18 @@ export default function PortfolioGame({
   );
 }
 
-// Estilos rápidos en línea (puedes pasarlos a tu CSS normal)
 const styles = {
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10 // Se asegura de estar por encima del iframe
+    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', display: 'flex',
+    justifyContent: 'center', alignItems: 'center', zIndex: 10
   },
   modal: {
-    backgroundColor: 'white',
-    padding: '40px',
-    borderRadius: '12px',
-    maxWidth: '500px',
-    textAlign: 'center',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
+    backgroundColor: 'white', padding: '40px', borderRadius: '12px',
+    maxWidth: '500px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
   },
   closeButton: {
-    marginTop: '20px',
-    padding: '10px 20px',
-    backgroundColor: '#333',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
+    marginTop: '20px', padding: '10px 20px', backgroundColor: '#333',
+    color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer'
   }
 };
