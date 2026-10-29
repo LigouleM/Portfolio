@@ -1,0 +1,314 @@
+/* =========================================
+   ESTILOS GLOBALES Y APP.JS
+========================================= */
+.app-container {
+  background-color: #1a1a2e;
+  height: 100vh; /* Obliga a la página a medir exactamente el alto del monitor */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Elimina permanentemente el scroll general de la página */
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background-color: #16213e;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  z-index: 50;
+}
+
+.nav-title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #0f3460;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav-btn.active {
+  background-color: #e94560;
+  border-color: #e94560;
+  font-weight: bold;
+}
+
+.main-content {
+  flex: 1; /* Ocupa todo el espacio sobrante debajo de la navbar */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Centra el juego 3D o las cartas verticalmente */
+  padding: 0; /* Removido para evitar que empuje el contenido hacia abajo */
+}
+
+.tab-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* =========================================
+   ESTILOS DEL JUEGO (PortfolioGame.js)
+========================================= */
+.game-wrapper {
+  position: relative; 
+  width: 100%;
+  max-width: 1200px;
+  height: 75vh;
+  margin-top: 40px;
+  border-radius: 16px;
+  border: 3px solid #e94560;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+.loading-screen {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #1a1a2e;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.loading-title {
+  color: #fff;
+  margin-top: 20px;
+}
+
+.loading-text {
+  color: #aaa;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #0f3460;
+  border-top: 5px solid #e94560;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal-content {
+  background-color: white;
+  color: #333;
+  padding: 40px;
+  border-radius: 12px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.close-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* =========================================
+   ESTILOS DE LA INFORMACIÓN (TeamInfo.js)
+========================================= */
+.team-info-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; 
+  padding-bottom: 0; /* Permite que las cartas toquen el borde inferior */
+}
+
+.cards-hand {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  height: 480px; /* Incrementado para contener las cartas más altas */
+  display: flex;
+  justify-content: center;
+}
+
+/* LA CARTA (Modo Naipe Cerrado) */
+.team-card {
+  width: 280px; /* Cartas más anchas */
+  height: 420px; /* Cartas más altas */
+  background-image: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+  border-radius: 16px;
+  border: 4px solid #e94560;
+  box-shadow: -5px 5px 20px rgba(0,0,0,0.5);
+  position: absolute;
+  bottom: -60px; /* Las entierra un poco más en el borde de la pantalla */
+  transform-origin: bottom center; 
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.team-card:not(.expanded) {
+  transform: translateY(var(--arcY)) rotate(var(--rot));
+}
+
+/* EFECTO HOVER: Eleva más la carta para compensar su nuevo tamaño */
+.team-card:hover:not(.expanded) {
+  transform: translateY(calc(var(--arcY) - 90px)) rotate(var(--rot)) scale(1.05);
+  z-index: 50 !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+.team-name-front {
+  color: #fff;
+  font-size: 2rem; /* Texto de la portada más grande */
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
+  margin: 0;
+}
+
+/* LA CARTA (Modo Expandido / Modal) */
+.team-card.expanded {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 900px;
+  height: 85vh;
+  z-index: 100;
+  cursor: auto;
+  justify-content: flex-start;
+  padding: 0;
+  border-radius: 16px;
+  background-image: none;
+  background-color: #1a1a2e;
+}
+
+.card-expanded-content {
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.card-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(4px);
+  z-index: 90;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.team-name {
+  margin: 0;
+  color: #e94560;
+  font-size: 2.2rem;
+}
+
+.close-card-btn {
+  padding: 12px 30px;
+  background-color: #e94560;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close-card-btn:hover {
+  background-color: #ff5c77;
+}
+
+.team-links {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.team-link-btn {
+  padding: 10px 20px;
+  background-color: #0f3460;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.team-link-btn:hover {
+  background-color: #164885;
+}
+
+.team-info-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.popup-block {
+  background-color: #16213e;
+  padding: 25px;
+  border-radius: 12px;
+  border-left: 4px solid #00d2ff;
+}
+
+.popup-title {
+  margin: 0 0 15px 0;
+  font-size: 1.3rem;
+  color: #00d2ff;
+}
+
+.popup-desc {
+  margin: 0;
+  line-height: 1.7;
+  color: #ddd;
+  white-space: pre-wrap; 
+  font-size: 1.05rem;
+}

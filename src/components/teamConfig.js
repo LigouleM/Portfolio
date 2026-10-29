@@ -25,7 +25,7 @@ export const teamConfig = {
   },
   josefina: {
     links: {
-      JS_linkedin: "www.linkedin.com/in/josefina-sardinas",
+      JS_linkedin: "https://www.linkedin.com/in/josefina-sardinas",
       JS_github: "https://github.com/josecsardinas"
     },
     popups: {
@@ -37,7 +37,7 @@ export const teamConfig = {
   },
   conti: {
     links: {
-      CP_linkedin: "www.linkedin.com/in/constanza-plaza-69923a447",
+      CP_linkedin: "https://www.linkedin.com/in/constanza-plaza-69923a447",
       CP_github: "https://github.com/contiiplazaa"
     },
     popups: {
@@ -60,19 +60,7 @@ export const teamConfig = {
   },
   guada: {
     links: {
-      GB_linkedin: "www.linkedin.com/in/guadalupe-burgos-119349447",
-      GB_github: "https://github.com/guadaburgos"
-    },
-    popups: {
-      GB_presentacion: {
-        title: "Sobre mi",
-        content: "¡Hola! Soy Valentina Guadalupe Burgos\nSoy estudiante de Ingeniería en Informática en la Universidad Católica de Salta. Me interesan las bases de datos, el diseño de interfaces y la ciberseguridad. Me gusta pensar cómo organizar la información, cómo hacer que una aplicación sea intuitiva y cómo proteger los datos de quienes la utilizan.\nMe motiva combinar la creatividad con la lógica, aprender nuevas herramientas y poner en práctica lo que voy descubriendo."
-      }
-    }
-  },
-  guada: {
-    links: {
-      GB_linkedin: "www.linkedin.com/in/guadalupe-burgos-119349447",
+      GB_linkedin: "https://www.linkedin.com/in/guadalupe-burgos-119349447",
       GB_github: "https://github.com/guadaburgos"
     },
     popups: {
@@ -84,7 +72,7 @@ export const teamConfig = {
   },
   cam: {
     links: {
-      CM_linkedin: "www.linkedin.com/in/camila-moreno-9470b6302",
+      CM_linkedin: "https://www.linkedin.com/in/camila-moreno-9470b6302",
       CM_github: "https://github.com/camimorenoo"
     },
     popups: {
